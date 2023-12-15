@@ -5,7 +5,8 @@ dependencies:
   - python==3.12
   - pandas~=2.1.1
   - jupyter
-  pip:
+  - flit
+  - pip:
     - newspaper3k
     - gnews==0.3.6
     #- googlenews

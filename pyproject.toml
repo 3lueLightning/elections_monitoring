@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "elections"
+authors = [
+    {name = "Diogo"},
+]
+description = "Package made to monitor the 2024 portuguese elections"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+
+dynamic = ["version"]
