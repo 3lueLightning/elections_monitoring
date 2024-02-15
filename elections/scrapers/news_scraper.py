@@ -15,6 +15,7 @@ from elections import constants
 
 class NewsScraper():
     # names returned by GNews
+    table_name = "articles"
     url_name = "url"
     title_name = "title"
     description_name = "description"
@@ -112,7 +113,7 @@ class NewsScraper():
     @staticmethod
     def load_past_urls() -> set:
         engine = sqlite3.connect(constants.NEWS_DB)
-        query = "SELECT url FROM articles"
+        query = f"SELECT url FROM {NewsScraper.table_name}"
         try:
             urls = pd.read_sql(query, con=engine)
         except pd.errors.DatabaseError:
