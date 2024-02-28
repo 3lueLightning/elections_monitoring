@@ -15,3 +15,8 @@ classifiers = [
 ]
 
 dynamic = ["version"]
+
+[tool.pytest.ini_options]
+markers = [
+    "openai: marks tests that require the OpenAI API, hence are paid",
+]

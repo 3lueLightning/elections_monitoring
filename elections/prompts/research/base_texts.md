@@ -7,8 +7,8 @@ Bernardo Ferrão
 “Este era um debate difícil e importante para os dois candidatos, uma vez que este combate na direita está com muitas provas de força em ambos. Parece que Luís Montenegro conseguiu mostrar que André Ventura não é uma pessoa coerente, é alguém que muda muitas vezes de opinião. Achei André Ventura nervoso neste debate. Não esteve completamente à vontade. André Ventura não teve a atitude de interromper constantemente, esteve mais controlado.”
 Sebastião Bugalho
 “Luís Montenegro tinha claramente uma estratégia, percebeu-se que era não levar muito a sério André Ventura. Ele não se enerva com André Ventura, não levanta a voz. Até parecia que estava a brincar com ele. Foi o primeiro líder partidário que enfrentou André Ventura e que o tratou exatamente como ele é, alguém incoerente que tem 7,18% do resultado das últimas eleições”
-
 “””
+[article link](https://sicnoticias.pt/especiais/eleicoes-legislativas/2024-02-12-Luis-Montenegro-e-Andre-Ventura-quem-teve-melhor-nota-no-debate--6b11094c)
 
 ## Analysis
 Actual score given by the jornalists:
