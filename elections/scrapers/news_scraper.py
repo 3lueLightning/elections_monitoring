@@ -6,14 +6,25 @@ from typing import Optional
 
 import sqlite3
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from gnews import GNews
+from unidecode import unidecode
 from newspaper import Article, ArticleException
 
 from elections import constants
+from elections.utils import full_logger
+
+
+logger = full_logger(constants.LOG_LVL, constants.SCRAPE_LOG_FN)
 
 
 class NewsScraper():
+    """
+    The articles scrapping operates in two steps:
+    1. Get the metadata from the articles (via GNews API): get_metadata()
+    2. Get the actually content from the articles (via newspaper3k API): get_article()
+    """
     # names returned by GNews
     table_name = "articles"
     url_name = "url"
@@ -58,6 +69,7 @@ class NewsScraper():
         return formated_metadata
             
     def get_metadata(self, max_results: Optional[int]=None) -> None:
+        logger.info(f"Getting metadata for {self.query}")
         google_news = GNews(
             language=constants.LANGUAGE,
             country=constants.COUNTRY,
@@ -67,6 +79,7 @@ class NewsScraper():
         )
         query_metadata = google_news.get_news(self.query)
         self.query_metadata = NewsScraper._format_metadata(query_metadata)
+        logger.info(f"Found {len(self.query_metadata)} metadata entries")
     
     @staticmethod
     def _extract_content(article: Article, metadata: dict) -> dict:
@@ -76,12 +89,10 @@ class NewsScraper():
         news["keywords"] = article.keywords
         news["text"] = article.text
         return news
-
-    #def validate_metadata(self) -> None:
-    #   pass
         
     def get_article(self) -> None:
         assert self.query_metadata != [{}], "run get_metadata first"
+        logger.info(f"Getting articles")
         
         news = []
         for article_metadata in self.query_metadata:
@@ -93,6 +104,7 @@ class NewsScraper():
                 continue
             news.append(self._extract_content(article, article_metadata))
         self.news = pd.DataFrame(news)
+        logger.info(f"Found {len(self.news)} articles")
     
     def save_articles(self) -> None:
         engine = sqlite3.connect(constants.NEWS_DB)
@@ -119,4 +131,86 @@ class NewsScraper():
         except pd.errors.DatabaseError:
             return set()
         return set(urls["url"])
+    
+    @staticmethod
+    def count_daily_politician_references() -> pd.DataFrame:
+        """
+        Count the number of references to each politician per day
+        """
+        
+        case_when_list = []
+        as_politician_col_list = []
+        for politician in constants.POLITICIANS:
+            politician = politician.lower()
+            sanitised_name = unidecode(politician) # remove accents
+            has_politician_col = "has_" + sanitised_name.replace(' ', '_')
+            case_when = f"CASE WHEN INSTR(LOWER(title || text), '{politician}') \
+                THEN 1 ELSE 0 END AS {has_politician_col}"
+            case_when_list.append(case_when)
+            as_politician_col_list.append(has_politician_col)
+        
+        sum_cols = [
+            f"SUM({col}) {col.replace("has", "n")}" for col in as_politician_col_list
+        ]
+        
+        query = f"""
+        WITH politicans_referred AS (
+            SELECT
+                DATE(pubdate) pubday,
+                {",\n\t".join(case_when_list)}
+            FROM articles
+        )
+        SELECT
+            \tpubday,
+            \t{",\n\t".join(sum_cols)}
+        FROM politicans_referred
+        GROUP BY pubday
+        ORDER BY pubday
+        """
+        
+        engine = sqlite3.connect(constants.NEWS_DB)
+        daily_ref_counts = pd.read_sql(query, con=engine)
+        return daily_ref_counts
+    
+    @staticmethod
+    def plot_daily_politician_ref_counts() -> None:
+        df = NewsScraper.count_daily_politician_references()
+        all_cols = [col for col in df.columns if col.startswith("n_")]
+        n = len(all_cols)
+        
+        print(df[all_cols].sum())
+        
+        y_max = df[all_cols].max().max()
+        fig, axes = plt.subplots(n, 1, figsize=(15, 6 * n))
+        plt.subplots_adjust(hspace=0.3)
+        for col, ax in zip(all_cols, axes):
+            df.plot(x="pubday", y=col, kind="line", ax=ax)
+            ax.set_title(col.replace("n_", "").replace("_", " "))
+            ax.set_ylabel("number of articles")
+            ax.set_xlabel("publishing date")
+            ax.set_ylim(0, y_max + 1)
+        plt.show()
+    
+    @staticmethod
+    def count_daily_articles() -> pd.DataFrame:
+        query = """
+        SELECT
+            DATE(pubdate) pubday,
+            COUNT(*) n_articles
+        FROM articles
+        GROUP BY pubday
+        """
+        engine = sqlite3.connect(constants.NEWS_DB)
+        daily_article_counts = pd.read_sql(query, con=engine)
+        return daily_article_counts
+    
+    def plot_daily_article_counts() -> None:
+        df = NewsScraper.count_daily_articles()
+        fig, ax = plt.subplots(1, 1, figsize=(15, 8))
+        df.plot(x="pubday", y="n_articles", kind="line", ax=ax)
+        ax.set_title("Number of articles per day")
+        ax.set_ylabel("number of articles")
+        ax.set_xlabel("publishing date")
+        ax.set_ylim(0, 40)
+        plt.show()
     
