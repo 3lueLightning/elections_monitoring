@@ -107,27 +107,27 @@ class NewsScraper():
         logger.info(f"Found {len(self.news)} articles")
     
     def save_articles(self) -> None:
-        engine = sqlite3.connect(constants.NEWS_DB)
         news = self.news.copy()
         news["keywords"] = news["keywords"].apply(json.dumps, ensure_ascii=False)
         news["creation_datetime"] = datetime.now()
         news["query"] = self.query
-        news.to_sql("articles", con=engine, if_exists="append", index=False)
+        with sqlite3.connect(constants.NEWS_DB) as engine:
+            news.to_sql("articles", con=engine, if_exists="append", index=False)
     
     @staticmethod
     def load_articles(query: str="SELECT * FROM articles") -> pd.DataFrame:
-        engine = sqlite3.connect(constants.NEWS_DB)
-        news = pd.read_sql(query, con=engine)
+        with sqlite3.connect(constants.NEWS_DB) as engine:
+            news = pd.read_sql(query, con=engine)
         if "keywords" in news:
             news["keywords"] = news["keywords"].apply(json.loads)
         return news
     
     @staticmethod
     def load_past_urls() -> set:
-        engine = sqlite3.connect(constants.NEWS_DB)
         query = f"SELECT url FROM {NewsScraper.table_name}"
         try:
-            urls = pd.read_sql(query, con=engine)
+            with sqlite3.connect(constants.NEWS_DB) as engine:
+                urls = pd.read_sql(query, con=engine)
         except pd.errors.DatabaseError:
             return set()
         return set(urls["url"])
@@ -168,8 +168,8 @@ class NewsScraper():
         ORDER BY pubday
         """
         
-        engine = sqlite3.connect(constants.NEWS_DB)
-        daily_ref_counts = pd.read_sql(query, con=engine)
+        with sqlite3.connect(constants.NEWS_DB) as engine:
+            daily_ref_counts = pd.read_sql(query, con=engine)
         return daily_ref_counts
     
     @staticmethod
@@ -200,8 +200,8 @@ class NewsScraper():
         FROM articles
         GROUP BY pubday
         """
-        engine = sqlite3.connect(constants.NEWS_DB)
-        daily_article_counts = pd.read_sql(query, con=engine)
+        with sqlite3.connect(constants.NEWS_DB) as engine:
+            daily_article_counts = pd.read_sql(query, con=engine)
         return daily_article_counts
     
     def plot_daily_article_counts() -> None:

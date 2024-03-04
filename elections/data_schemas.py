@@ -1,4 +1,3 @@
-from typing import Iterable
 from typing_extensions import Annotated
 from pydantic import BaseModel, Field, field_validator
 
@@ -36,4 +35,6 @@ class Sentiment(BaseModel):
     
     # TODO: create llm validator to ensure that the citation are in the orginal text
 
-ArticleSentiment = Iterable[Sentiment]
+
+class ArticleSentiment(BaseModel):
+    sentiments: list[Sentiment]

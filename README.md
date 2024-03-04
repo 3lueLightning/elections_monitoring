@@ -15,15 +15,22 @@ This apolotical project aims to analyse the various political parties with parla
 2. create system to fetch all information about all candidats (in constants.POLITICIANS) during a certain time period
     1. produce the necessary logs
     2. ensure that no article is extracted twice
-    3. the system looks at the current date as the last extraction date and takes the max(creatation_datetime) in the artciles table -1 day as the new extraction start date 
+    3. the system looks at the current date as the last extraction date and takes the max(creatation_datetime) in the articles table -1 day as the new extraction start date 
     4. NB: currently it will have manual trigger from a notebook or python file
+3. created a **article_sentiment** SQLite table with the sentiment analysis of each article:
+    1. article_id
+    2. analysis (extracted from OpenAI)
+    3. system_prompt
+    4. user_prompt
 
 ## Next steps:
 All the above was just performed with a few use cases, now I have to scale it:  
-1. create a SQLite table with the sentiment analysis of each article:
-    1. artcile_id
-    2. sentiment_json (extracted from OpenAI)
-2. create a **daily_mentions** SQLite table:
+1. currently there are 686 articles scrapped, should attempt to get more.
+    1. maybe the scrapping order as an effect on the number of results obtained by each politician, so I should randomise it.
+2. add validation to the data obtained from the OpenAI API, correct errors:
+    1. sometimes it identifies politicians that are no in the text
+    2. it fails to find citations for politicians that are present
+3. create a **daily_mentions** SQLite table:
     1. mention_id: primary key
     2. politician_name
     3. date (which corresponds to articles pubdate)

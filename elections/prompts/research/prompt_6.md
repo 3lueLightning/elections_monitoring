@@ -1,3 +1,6 @@
+# Last prompt with manual json encoding
+
+``` python
 import re
 
 
@@ -54,3 +57,4 @@ The politicians score goes from 0 to 1 (with 1 being extremely good). \
 If the opinion is neutral provide a .5, if the article is only factual \
 and does not have an opinion then the score should be: None 
 """
+```

@@ -31,12 +31,13 @@ MILVUS_PORT = default_server.listen_port
 
 # OpenAI API
 MAX_RETRIES = 3
-OPENAI_GPT_MODEL = 'gpt-3.5-turbo'
+OPENAI_GPT_MODEL = 'gpt-3.5-turbo' #'gpt-4-turbo-preview'
 OPENAI_EMBEDDING_MODEL = 'text-embedding-3-small'
 
 # Logging
 LOG_LVL = logging.INFO
 SCRAPE_LOG_FN = LOG_DIR / "scrape.log"
+SENTIMENT_LOG_FN = LOG_DIR / "sentiment.log"
 
 # Politicians
 POLITICIAN_ALIASES = {

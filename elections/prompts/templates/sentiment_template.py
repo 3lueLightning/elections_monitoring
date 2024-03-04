@@ -1,49 +1,100 @@
+import re
+
+from elections import constants
+
+
+example_answer = """
+[{{"name": "Luís Montenegro", "score": 0.5, "citations": [\
+    {{"quote": "Luís Montenegro manteve aquilo que faz dele um confiável primeiro-ministro. Foi mais claro, mais confiável \
+        na parte da habitação e do cenário macroeconómico", "score": 0.8, "author": "Maria João Avillez"}}, \
+    {{"quote": "Montenegro ficou nas encolhas. Pedro Passos Coelho não teria dado esta resposta, Durão Barroso não teria \
+        dado essa resposta, Cavaco Silva não teria dado essa resposta. NO primeiro minuto, Luís Montenegro perdeu o debate", \
+        "score": 0.3, "author": "Ricardo Costa"}}, \
+    ]}}, \
+ {{"name": "Pedro Nuno Santos", "score": 0.6, "citations": [\
+    {{"quote": "No entanto, vimos um Pedro Nuno Santos como nunca tínhamos visto até aqui", "score": 0.8, \
+        "author": "Maria João Avillez"}}, \
+    {{"quote": "Pedro Nuno Santos entrou ao ataque. Tivemos 80 minutos, Pedro Nuno Santos marca no início do debate, \
+        todo o resto é equilibrado", "score": 0.7, "author": "Martim Silva"}}, \
+    {{"quote": "O líder do PS teve dificuldades na habitação e saúde, mas no fim da partida volta a marcar golo na \
+        questão dos pensionistas", "score": 0.6, "author": "Martim Silva"}}, \
+    {{"quote": "O secretado geral do PS estava nas cordas", "score": 0.2}}]}}, \
+ {{"name": "Rui Rocha", "score": None, "citations": []}}]
+"""
+
+EXAMPLE_ANSWER = re.sub(r'\s+', ' ', example_answer.strip())
+
+
 SYSTEM_PROMPT = """\
-TASK
+# TASK
 You will be provided with a document delimited by triple quotes and a question. \
 Your task is to answer the question using only the provided document and to cite \
 the passage(s) of the document used to answer the question. If the document does \
 not contain the information needed to answer this question, then simply write: [].
 
-ADDITIONAL INFORMATION
+## ADDITIONAL INFORMATION
 Politicians list: {politicians}
 
-PROCESS
+## PROCESS
 Take your time to answer the question and go through the following steps:
 1. Parse Document: Extract relevant information from the document, such as quotes and mentions of politicians.
-2. Identify Politicians: Match mentioned politicians from the provided list with those mentioned in the document.
-3. Quote Extraction: For each matched politician, extract quotes that refer to them.
-4. Opinion Analysis: Analyze the extracted quotes for sentiment or opinion, if applicable, and include this information in the citations.
-5. Author Attribution: If available, attribute quotes to their respective authors and include this information in the citations.
-6. Final Score Calculation: Based on all extracted information, calculate a final score for each politician reflecting the overall opinion.
-7. JSON Generation: Generate the final JSON output, including only information relevant to mentioned politicians.
-"""
+2. Break down passages: if a quote is conveying multiple pieces of information, break it down into smaller parts.
+3. Filter Out Politicians: only keep extracts referring to people present on the provided politicians list.
+4. Filter quotes: For each matched politician, attach in 'citations' all the corresponding quotes that contain an opinion
+   (hence not just factual).
+5. Scoring quotes: for each quote set a score from 0 to 1, with 1 being extremely good, .5 being neutral and 0 being
+   extremely bad.
+6. Author Attribution: If available, attribute quotes to their respective authors.
+7. Final Score Calculation: Based on all extracted information, calculate a final score for each politician
+   reflecting the overall opinion. It should be aligned with the scoring of the quotes.
+
+------------------------------
+# EXAMPLE 1:
+## ARTICLE
+\"""
+### Title
+Pedro Nuno Santos e Luís Montenegro: quem teve melhor nota no debate?
+
+### Description
+Pedro Nuno Santos e Luís Montenegro: quem teve melhor nota no debate? 
+
+### Text
+Maria João Avillez “Luís Montenegro manteve aquilo que faz dele um confiável primeiro-ministro. Foi mais claro, mais confiável\
+na parte da habitação e do cenário macroeconómico. No entanto, vimos um Pedro Nuno Santos como nunca tínhamos visto até aqui”.
+
+Ricardo Costa “No início do debate passou-se uma coisa grave. O debate foi feito com polícia à porta em protesto. \
+Isto é absolutamente inaceitável. Pedro Nuno Santos disse: 'Eu não negoceio sobre coação', Montenegro ficou nas encolhas. \
+Pedro Passos Coelho, Durão Barroso não teria dado esta resposta. NO primeiro minuto, Luís Montenegro perdeu o debate”.
+
+Martim Silva “Pedro Nuno Santos entrou ao ataque. Tivemos 80 minutos, Pedro Nuno Santos marca no início do debate, todo \
+o resto é equilibrado. O líder do PS teve dificuldades na habitação e saúde, mas no fim da partida volta a marcar golo na \
+questão dos pensionistas”.
+
+Alguem disse que Rui Rocha é um homano de sexo masculino. Rui Rocha vive em Portugal e que o secretado geral do PS estava \
+nas cordas
+\"""
+
+## Answer:
+{example_answer}
+
+""".format(example_answer=EXAMPLE_ANSWER, politicians=constants.POLITICIANS)
 
 
 USER_PROMPT = """\
-ARTICLE:
+# ARTICLE:
 \"""\
-{article}\
+## Title
+{title}
+
+## Description
+{description}
+
+## Text
+{text}
 \"""  
 
-QUESTION: 
-Only provide a JSON for your analysis and nothing more. \
-The politicians score goes from 0 to 1 (with 1 being extremely good). \
-If the opinion is neutral provide a .5, if the article is only factual \
-and does not have an opinion then the score should be: None 
-"""
-
-bkp = """
-1.	consider this list of politicians: {politicians}
-2.	for each politicians present identify all the quotes of the article that refer to them
-3.	for all parts that contain an opinion include them in the citations of the \
-    corresponding politician and indicate the probability of it being positive \
-    in the field score in the citations
-4.  if possible indicate the author of the quote in the citations
-5.	based on all the citations you have identified provide a final score to the \
-    politician that reflects the overall opinion
-6.  if a politician is mentioned in the article, but there are no quotes about him just leave \
-    the citations field empty.
-7.  If a politician isn't mentioned in the article do not include them under any circumstances \
-    in the final JSON !
+# QUESTION: 
+Only provide a JSON for your analysis and nothing more. The politicians score goes from 0 to 1. \
+If the article is only contains factual information regarding a particular politician then the \
+citations fields should be [] and the overall score should be: None 
 """

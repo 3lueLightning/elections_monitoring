@@ -42,3 +42,48 @@ Para Luís Montenegro, é "indiferente" quem sucederá a António Costa na lider
 
 ## Analysis
 there are multiple people in this article that are not politicians
+
+
+# Article 4
+[link](https://sicnoticias.pt/especiais/eleicoes-legislativas/2024-02-19-Pedro-Nuno-Santos-e-Luis-Montenegro-quem-teve-melhor-nota-no-debate--4269ac98) to article  
+"""
+Em análise o debate entre o secretário-geral do Partido Socialista, Pedro Nuno Santos, e o líder do PSD, Luís Montenegro. Quem teve melhor desempenho? As notas dos comentadores da SIC.
+
+Maria João Avillez “Luís Montenegro manteve aquilo que faz dele um confiável primeiro-ministro. Foi mais claro, mais confiável na parte da habitação e do cenário macroeconómico. No entanto, vimos um Pedro Nuno Santos como nunca tínhamos visto até aqui”.
+
+Ricardo Costa “No início do debate passou-se uma coisa grave. O debate foi feito com polícia à porta em protesto. Isto é absolutamente inaceitável. Pedro Nuno Santos disse: ‘Eu não negoceio sobre coação’, Montenegro ficou nas encolhas. Pedro Passos Coelho não teria dado esta resposta, Durão Barroso não teria dado essa resposta, Cavaco Silva não teria dado essa resposta. NO primeiro minuto, Luís Montenegro perdeu o debate”.
+
+Ana Luisa Monteiro
+
+Daniel Oliveira “Pedro Nuno Santos esteve a descansar este tempo todo para ganhar balanço para este debate. Houve uma notícia aqui: Pedro Nuno desfez o tabu, inverteu as posições e disse uma frase que matou o assunto: 'não apresentaremos, nem votaremos favoravelmente moções de censura a um governo minoritário do PSD. Um dos problemas de Montenegro na questão da governabilidade, da PSP e do aeroporto foi não responde. Montenegro não arrancou bem".
+
+SIC
+
+Martim Silva “Pedro Nuno Santos entrou ao ataque. A frase da autoridade do Estado, que podíamos esperar do líder de centro-direita, vem do ‘radical de esquerda’ como Montenegro gosta de o apelidar. Tivemos 80 minutos, Pedro Nuno Santos marca no início do debate, todo o resto é equilibrado. O líder do PS teve dificuldades na habitação e saúde, mas no fim da partida volta a marcar golo na questão dos pensionistas”.
+
+SIC
+
+Ângela Silva "Pedro Nuno Santos não teve debates brilhantes, mas Pedro Nuno Santos perdeu este. Esteve quase sempre à defesa contra um animal político. Pedro Nuno Santos que andou empatado por uma série de questões, libertou-se. Talvez até se tenha liberta um pouco demais. Montenegro esteve mal no arranque.
+
+SIC
+
+Paulo Baldaia “Expectativa jogou claramente a favor de Pedro Nuno Santos. Montenegro começou muito mal na questões das polícias. Não foi capaz de dizer à polícia para cumprir a lei e ordem. Na questão das pensões, Montenegro acabou por insistir numa coisa que não era verdade.”
+
+SIC
+
+Sebastião Bugalho “Foi uma belíssima performance de Pedro Nuno Santos, não só pelo início, mas também pelo fim. Consegue aguentar-se em temas tão curiosos como a governabilidade. Noutra das questões mais frágeis, Pedro Nuno Santos acaba por conseguir escapar - é o tema do aeroporto. Debate não podia ter corrido melhor a Pedro Nuno Santos, conseguiu agarra-lo no início e não foi fragilizado nas suas feridas mais abertas”
+"""
+
+## Analysis
+Each commentator gave a grade out of 10 to each politician as follows:
+| commentator | pns | montenegro |
+| ----------- | --- |   ---- |
+| Maria João Avillez | 6 | 6 |
+| Ricardo Costa | 7 | 6 |
+| Daniel Oliveira | 8 | 5 |
+| Martim Silva | 8 | 6 |
+| Ângela Silva | 9 | 7 |
+| Paulo Baldaia | 8 | 6 |
+| Sebastião Bugalho | 7 | 6 |
+| average | 7.6 | 6 |
+
