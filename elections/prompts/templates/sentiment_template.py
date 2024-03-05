@@ -32,14 +32,11 @@ Your task is to answer the question using only the provided document and to cite
 the passage(s) of the document used to answer the question. If the document does \
 not contain the information needed to answer this question, then simply write: [].
 
-## ADDITIONAL INFORMATION
-Politicians list: {politicians}
-
 ## PROCESS
 Take your time to answer the question and go through the following steps:
-1. Parse Document: Extract relevant information from the document, such as quotes and mentions of politicians.
+1. Parse Document: Extract relevant information from the document, such as quotes and mentions refegarding 
+   these politicians: {politicians}
 2. Break down passages: if a quote is conveying multiple pieces of information, break it down into smaller parts.
-3. Filter Out Politicians: only keep extracts referring to people present on the provided politicians list.
 4. Filter quotes: For each matched politician, attach in 'citations' all the corresponding quotes that contain an opinion
    (hence not just factual).
 5. Scoring quotes: for each quote set a score from 0 to 1, with 1 being extremely good, .5 being neutral and 0 being
@@ -77,7 +74,7 @@ nas cordas
 ## Answer:
 {example_answer}
 
-""".format(example_answer=EXAMPLE_ANSWER, politicians=constants.POLITICIANS)
+""".format(example_answer=EXAMPLE_ANSWER, politicians="{politicians}")
 
 
 USER_PROMPT = """\
