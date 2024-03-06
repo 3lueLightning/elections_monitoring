@@ -31,7 +31,7 @@ MILVUS_PORT = default_server.listen_port
 
 # OpenAI API
 MAX_RETRIES = 3
-OPENAI_GPT_MODEL = 'gpt-3.5-turbo' #'gpt-4-turbo-preview'
+OPENAI_GPT_MODEL = 'gpt-3.5-turbo' # 'gpt-4-turbo-preview'
 OPENAI_EMBEDDING_MODEL = 'text-embedding-3-small'
 
 # Logging

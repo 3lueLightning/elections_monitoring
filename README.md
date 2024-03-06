@@ -1,6 +1,23 @@
-# elections_monitoring
+# Portuguese elections 2024
 
-This apolotical project aims to analyse the various political parties with parlamentary seat that participate in the the 2024 Portuguese Parlamentary elections.
+<p align="center">
+  <img src="images/portugal_votes.jpg" alt="portugal votes"/>
+</p>
+
+
+This non-partisan project aims to analyse the media coverage of the various political parties with parlamentary seat that participate in the the 2024 Portuguese Parlamentary elections. It then proceeds to analyse the political commentators sentiement towards each candidate.  
+
+. It consists of 3 parts, with the first 2 being ready:
+1.	Collecting news articles: on all the main candidates via a web-scraping API.
+2.	Sentiment analysis: 
+    1.	using the Open API with GPT-3.5 and GPT-4 to analyze the sentiment of each article and extract its content in a pydantic data structure, which can be validated and JSON serialized. 
+    2.	Control for hallucinations automatically and allow for human validation.
+3.	Presenting the results:
+    1.	Create analysis and charts.
+    2.	Create a streamlit site.
+
+Note: this is a one-off project therefore I didn’t go through the steps to productionize it.
+
 
 ## Current package is capable of:
 1. extracting all news that match a given query and store it in a sqlite db

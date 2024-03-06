@@ -117,3 +117,6 @@ dmypy.json
 
 # Vim
 *.swp
+
+# Experimentation files
+tt*

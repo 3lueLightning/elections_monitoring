@@ -7,5 +7,6 @@ CREATE TABLE article_sentiments (
     analysis TEXT,
     system_prompt TEXT,
     user_prompt TEXT,
+    error_message TEXT,
     FOREIGN KEY (article_id) REFERENCES articles (article_id)
 );

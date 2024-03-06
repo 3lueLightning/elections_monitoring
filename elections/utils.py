@@ -1,8 +1,10 @@
 import re
+import json
 import logging
 import inspect
 
 from pathlib import Path
+from pydantic import BaseModel, ValidationError
 
 
 class SetLogger:
@@ -91,6 +93,32 @@ def get_table_ddl(cursor, table_name):
     )
     return cursor.fetchone()[0]
 
+
+def safe_model_validate_json(x: str, model: BaseModel) -> BaseModel | None:
+    """
+    Safely loads a pydantic model from a json string, returning None if it fails
+    """
+    try:
+        return model.model_validate_json(x)
+    except ValidationError:
+        return None
+
+
+def safe_model_dumps(x: BaseModel) -> dict | None:
+    try:
+        return x.model_dump_json()
+    except AttributeError:
+        return None
+
+
+def safe_json_loads(x: str) -> dict | None:
+    """
+    Safely loads a json string, returning None if it fails
+    """
+    try:
+        return json.loads(x)
+    except TypeError:
+        return None
 
 
 def escape_quotes_within_citation(text):

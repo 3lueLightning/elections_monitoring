@@ -34,9 +34,11 @@ not contain the information needed to answer this question, then simply write: [
 
 ## PROCESS
 Take your time to answer the question and go through the following steps:
-1. Parse Document: Extract relevant information from the document, such as quotes and mentions refegarding 
-   these politicians: {politicians}
+1. Parse Document: Extract relevant information from the document, such as quotes and mentions of the politicians provided
+   by the user
 2. Break down passages: if a quote is conveying multiple pieces of information, break it down into smaller parts.
+3. Preserve quotes: never alter a passage, even it there are spelling or grammatical mistakes. If you skip part of the text
+   then use ... to indicate the skipped part.
 4. Filter quotes: For each matched politician, attach in 'citations' all the corresponding quotes that contain an opinion
    (hence not just factual).
 5. Scoring quotes: for each quote set a score from 0 to 1, with 1 being extremely good, .5 being neutral and 0 being
@@ -71,15 +73,20 @@ Alguem disse que Rui Rocha é um homano de sexo masculino. Rui Rocha vive em Por
 nas cordas
 \"""
 
-## Answer:
+## QUESTION
+For the following politicians: Pedro Nuno Santos, Luís Montenegro, provide a JSON for your analysis and nothing more. 
+The politicians score goes from 0 to 1. If the article is only contains factual information regarding \
+a particular politician then the citations fields should be [] and the overall score should be: None 
+
+## ANSWER:
 {example_answer}
 
-""".format(example_answer=EXAMPLE_ANSWER, politicians="{politicians}")
+""".format(example_answer=EXAMPLE_ANSWER)
 
 
 USER_PROMPT = """\
 # ARTICLE:
-\"""\
+\"""
 ## Title
 {title}
 
@@ -90,8 +97,10 @@ USER_PROMPT = """\
 {text}
 \"""  
 
-# QUESTION: 
-Only provide a JSON for your analysis and nothing more. The politicians score goes from 0 to 1. \
-If the article is only contains factual information regarding a particular politician then the \
-citations fields should be [] and the overall score should be: None 
+# QUESTION
+For the following politicians: {politicians}, provide a JSON for your analysis and nothing more. 
+The politicians score goes from 0 to 1. If the article is only contains factual information regarding \
+a particular politician then the citations fields should be [] and the overall score should be: None 
+
+# ANSWER:
 """
