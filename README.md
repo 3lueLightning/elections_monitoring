@@ -23,7 +23,10 @@ It consists of 3 parts, with the first 2 being ready and the 3rd under construct
     2.	Control for hallucinations automatically and allow for human validation.
     3.  *Entry point*: `elections/main/2_sentiment_analysis.ipynb`
 3.	**Presenting the results**:
-    1.	Create analysis and charts.
+    1.	Create analysis and charts:
+        1. can show overall sentiment of politicican
+        2. ridge plot (kind of kernel density estimate) of the scores of each quote associated to a politician
+        3. show the evolution of the politicians score (smoothed version ready)
     2.	Create a streamlit site.
     3.  *Entry point*: under construction
 
@@ -39,14 +42,6 @@ Note: this is a one-off project therefore I didn’t go through the steps to pro
     2. possibilities:
         1. in the case of the numerous articles without sentiment some genuinely have no sentiment other might - investigation on-going
         2. the errors are due to validation error of the pydantic data model passed to instructor - understand how modify prompt to reduce errors. As a backup use GPT-4-turbo for some articles rather then GPT-3.5-turbo
-3. create a **daily_mentions** SQLite table:
-    1. mention_id: primary key
-    2. politician_name
-    3. date (which corresponds to articles pubdate)
-    3. score: the average score of that politician
-    4. n_articles: number of articles mentioning him/her
-    5. n_pos_quotes: how many positive quotes
-    6. n_neg_quotes: how many negative quotes
-    7. NB: politician_name and date also form composite keys
-
+        3. add new examples on the prompt to avoid the pitfalls above
+        4. create a seconda vlidation stage if citations of a politician are too negative
 

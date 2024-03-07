@@ -39,6 +39,25 @@ LOG_LVL = logging.INFO
 SCRAPE_LOG_FN = LOG_DIR / "scrape.log"
 SENTIMENT_LOG_FN = LOG_DIR / "sentiment.log"
 
+# Portuguese news outlets
+NEWS_OUTLETS = [
+    "Público",
+    "Correio da Manhã",
+    "Jornal de Notícias",
+    "Expresso",
+    "Diário de Notícias",
+    "Observador",
+    "Sábado",
+    "SIC Noticias",
+    "RTP Noticias",
+    "TSF",
+    "Renascença",
+    "Sol",
+    "Eco",
+    "TVI",
+    "TVI24"
+]
+
 # Politicians
 POLITICIAN_ALIASES = {
     "Pedro Nuno Santos": [
@@ -84,4 +103,16 @@ POLITICIAN_ALIASES = {
     ],
 }
 POLITICIANS = list(POLITICIAN_ALIASES.keys())
+
+POLITICIAN_COLORS = {
+    "Pedro Nuno Santos": "#D32329",# "#139E6A",
+    "Luís Montenegro": "#F37F27",
+    "André Ventura": "#1F1F4C",
+    "Rui Rocha": "#04ADEF",
+    "Mariana Mortágua": "#e11b22",
+    "Paulo Raimundo": "#035FBC",
+    "Inês de Sousa Real": "#01798E",
+    "Rui Tavares": "#C3D500",
+}
+
 PM_RESIGNATION_DATE = datetime(2023, 12, 7, 0, 0, 0)
