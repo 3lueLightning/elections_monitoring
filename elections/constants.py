@@ -124,4 +124,15 @@ POLITICIAN_COLORS = {
     "Rui Tavares": "#C3D500",
 }
 
+PARTIES = {
+    "Pedro Nuno Santos": "secretário-geral do PS",
+    "Luís Montenegro": "presidente do partido social democrate (PSD) e lider da AD",
+    "André Ventura": "presidente do Chega",
+    "Rui Rocha": "presidente da Iniciativa Liberal (IL)",
+    "Mariana Mortágua": "coordenadora do Bloco de Esquerda (BE)",
+    "Paulo Raimundo": "secretário-geral do PCP e lider da CDU",
+    "Inês de Sousa Real": "porta voz do Partido Animais e Natureza (PAN)",
+    "Rui Tavares": "líder do Livre",
+}
+
 PM_RESIGNATION_DATE = datetime(2023, 12, 7, 0, 0, 0)

@@ -11,7 +11,8 @@ not contain the information needed to answer this question, then simply write: [
 ## PROCESS
 Take your time to answer the question and go through the following steps:
 1. Identify Politicians: Identify all politicians mentioned in the document, either directly or via aliases.
-2. Parse Document: Extract relevant information from the document, such as quotes and mentions of the politicians
+2. Parse Document: Extract relevant information from the document, such as quotes and mentions of the politicians.
+   Be extra careful not to miss passages, be on the lookout for names in the ALIAS section and strong adjectives.
 3. Break down passages: if a quote is conveying multiple pieces of information, break it down into smaller parts.
 4. Preserve quotes: never alter a passage, even it there are spelling or grammatical mistakes. If you skip part of the
    text then use ... to indicate the skipped part.
@@ -21,10 +22,13 @@ Take your time to answer the question and go through the following steps:
    extremely bad. Scores bellow 0.2 and above 0.8 shoul be given only when there is a very degree of certainty.
 7. Author Attribution: If available, attribute quotes to their respective authors.
 8. Final Score Calculation: Based on all extracted information, calculate a final score for each politician
-   reflecting the overall opinion. It should be aligned with the scoring of the quotes.
+   reflecting the overall opinion. It should be aligned with the scoring of the quotes. 
+9. Final output: All the politicians in the ALIAS section must be in the final answer if the article is only 
+   contains factual information regarding a particular politician then his/her citations fields should be [] and 
+   the overall score should be: None
 
 ------------------------------
-# EXAMPLE 1:
+
 {example_1}
 
-""".format(example_1=example_1.EXAMPLE)
+""".format(example_1=example_1.EXAMPLE_PROMPT)

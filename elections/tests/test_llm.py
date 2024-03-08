@@ -49,8 +49,6 @@ def test_prompt_example_1(article_1):
         "Politician names don't match, expecting: {example_1.POLITICIANS} "\
         "got: {names}"
     
-    import pdb; pdb.set_trace()
-    
     pns_sentiments = [sent for sent in sentiments if sent.name == "Pedro Nuno Santos"][0]
     montenegro_sentiments = [sent for sent in sentiments if sent.name == "Luís Montenegro"][0]
     rocha_sentiments = [sent for sent in sentiments if sent.name == "Rui Rocha"][0]

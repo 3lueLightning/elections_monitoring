@@ -12,7 +12,7 @@ from elections import constants
 from elections.data_schemas import ArticleSentiment
 from elections.scrapers.news_scraper import NewsScraper
 from elections.prompts.templates.system_prompt import SYSTEM_PROMPT
-from elections.prompts.templates.user_prompt import USER_PROMPT
+from elections.prompts.templates.user_prompt import USER_PROMPT_TEMPLATE
 from elections.prompts.templates.utils import get_aliases
 from elections.utils import (
     full_logger, safe_json_loads,  safe_model_validate_json, safe_model_dumps
@@ -112,11 +112,11 @@ class SentimentAnalysis:
         ]
 
         system_prompt = SYSTEM_PROMPT
-        user_prompt = USER_PROMPT.format(
+        user_prompt = USER_PROMPT_TEMPLATE.format(
             title=title, 
             description=description,
             text=text,
-            names=", ".join(politicians_present),
+            #names=", ".join(politicians_present),
             aliases=get_aliases(politicians_present),
         )
         

@@ -1,7 +1,7 @@
 import re
 import json
 
-from elections.prompts.templates.user_prompt import EXAMPLE_PROMPT
+from elections.prompts.templates.user_prompt import USER_PROMPT_TEMPLATE
 from elections.prompts.templates.utils import get_aliases
 
 
@@ -10,10 +10,6 @@ Pedro Nuno Santos e Luís Montenegro: quem teve melhor nota no debate?
 """
 
 DESCRIPTION = TITLE
-
-QUESTION = """
-Pedro Nuno Santos e Luís Montenegro: quem teve melhor nota no debate?
-"""
 
 TEXT = """
 Maria João Avillez “Luís Montenegro manteve aquilo que faz dele um confiável primeiro-ministro. Foi mais claro, mais \
@@ -56,11 +52,10 @@ ANSWER = re.sub(r'\s+', ' ', answer_json.strip())
 
 POLITICIANS = [sentiment["name"] for sentiment in answer]
 
-EXAMPLE = EXAMPLE_PROMPT.format(
+EXAMPLE_PROMPT = USER_PROMPT_TEMPLATE.format(
    title=TITLE,
    description=DESCRIPTION,
    text=TEXT,
-   question=QUESTION,
    answer=ANSWER,
    aliases=get_aliases(POLITICIANS),
    names=", ".join(POLITICIANS),
