@@ -111,12 +111,21 @@ def safe_model_dumps(x: BaseModel) -> dict | None:
         return None
 
 
-def safe_json_loads(x: str) -> dict | None:
+def safe_json_loads(*args, **kwargs) -> dict | None:
     """
     Safely loads a json string, returning None if it fails
     """
     try:
-        return json.loads(x)
+        return json.loads(*args, **kwargs)
+    except TypeError:
+        return None
+
+def safe_json_dumps(*args, **kwargs) -> dict | None:
+    """
+    Safely loads a json string, returning None if it fails
+    """
+    try:
+        return json.dumps(*args, **kwargs)
     except TypeError:
         return None
 

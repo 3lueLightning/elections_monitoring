@@ -13,7 +13,7 @@ from unidecode import unidecode
 from newspaper import Article, ArticleException
 
 from elections import constants
-from elections.utils import full_logger
+from elections.utils import full_logger, safe_json_dumps
 
 
 logger = full_logger(constants.LOG_LVL, constants.SCRAPE_LOG_FN)
@@ -40,7 +40,7 @@ class NewsScraper():
         self.start_date = start_date
         self.end_date = end_date
         self.max_results = None
-        self.query_metadata = [{}]
+        self.query_metadata = []
         self.news = pd.DataFrame()
 
     @staticmethod
@@ -91,7 +91,9 @@ class NewsScraper():
         return news
         
     def get_article(self) -> None:
-        assert self.query_metadata != [{}], "run get_metadata first"
+        if not self.query_metadata:
+            logger.info("No metadata to get articles from")
+            return
         logger.info(f"Getting articles")
         
         news = []
@@ -107,12 +109,16 @@ class NewsScraper():
         logger.info(f"Found {len(self.news)} articles")
     
     def save_articles(self) -> None:
+        if self.news.empty:
+            logger.info("No articles to save")
+            return
         news = self.news.copy()
-        news["keywords"] = news["keywords"].apply(json.dumps, ensure_ascii=False)
+        news["keywords"] = news["keywords"].apply(safe_json_dumps, ensure_ascii=False)
         news["creation_datetime"] = datetime.now()
         news["query"] = self.query
         with sqlite3.connect(constants.NEWS_DB) as engine:
             news.to_sql("articles", con=engine, if_exists="append", index=False)
+        logger.info(f"Saved {len(news)} articles")
     
     @staticmethod
     def load_articles(query: str="SELECT * FROM articles") -> pd.DataFrame:
@@ -120,6 +126,8 @@ class NewsScraper():
             news = pd.read_sql(query, con=engine)
         if "keywords" in news:
             news["keywords"] = news["keywords"].apply(json.loads)
+        if "pubdate" in news:
+            news["pubdate"] = pd.to_datetime(news["pubdate"])
         return news
     
     @staticmethod
@@ -211,6 +219,6 @@ class NewsScraper():
         ax.set_title("Number of articles per day")
         ax.set_ylabel("number of articles")
         ax.set_xlabel("publishing date")
-        ax.set_ylim(0, 40)
+        ax.set_ylim(0, None)
         plt.show()
     

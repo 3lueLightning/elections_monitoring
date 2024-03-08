@@ -11,7 +11,7 @@ from pydantic import ValidationError
 from elections import constants
 from elections.data_schemas import ArticleSentiment
 from elections.scrapers.news_scraper import NewsScraper
-from elections.prompts.templates import sentiment_template
+from elections.prompts.templates import system_prompt
 from elections.utils import (
     full_logger, safe_json_loads,  safe_model_validate_json, safe_model_dumps
 )
@@ -74,6 +74,22 @@ class SentimentAnalysis:
             query = f"{query} LIMIT {n_articles}"
         self.articles_df = NewsScraper.load_articles(query)
     
+    def filter_articles(self) -> None:
+        """
+        Many extracted articles are irrelavant to the election analysis depite having relevant search
+        queries. To accommodated for that we filter the articles to only include those that mention
+        politicians in the title or description or text.
+        """
+        assert not self.articles_df.empty, "No articles loaded"
+        
+        aliases = [alias for aliases in constants.POLITICIAN_ALIASES.values() for alias in aliases]
+        names_n_aliases = aliases + constants.POLITICIANS
+        mask_politician_in_title = (
+            (self.articles_df["title"] + self.articles_df["description"] + self.articles_df["text"])
+            .str.contains("|".join(names_n_aliases), case=False)
+        )
+        self.articles_df = self.articles_df[mask_politician_in_title]
+    
     def get_article_sentiment(self, title: str, description: str, text: str) -> pd.DataFrame:
         """
         Receives the title, description and text of an article and identifies each politician present 
@@ -93,8 +109,8 @@ class SentimentAnalysis:
             politician for politician in constants.POLITICIANS if politician in article_n_meta
         ]
         politicians_present_str = ", ".join(politicians_present)
-        system_prompt = sentiment_template.SYSTEM_PROMPT
-        user_prompt = sentiment_template.USER_PROMPT.format(
+        system_prompt = system_prompt.SYSTEM_PROMPT
+        user_prompt = system_prompt.USER_PROMPT.format(
             title=title, description=description, text=text, politicians=politicians_present_str
         )
         

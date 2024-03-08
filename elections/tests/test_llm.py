@@ -1,6 +1,23 @@
 import pytest
 
+import pandas as pd
+
 from openai import OpenAI
+
+from elections.sentiment_analysis import SentimentAnalysis
+from elections.prompts.templates import example_1
+
+@pytest.fixture
+def article_1():
+    df = pd.DataFrame([
+        {
+            "article_id": 1,
+            "title": example_1.TITLE,
+            "description": example_1.DESCRIPTION,
+            "text": example_1.TEXT,
+        }
+    ])
+    return df
 
 
 @pytest.mark.openai
@@ -16,3 +33,11 @@ def test_openai_connection():
 
     resp = sentiment.choices[0].message.content
     assert resp == 'This is a test.', "OpenAI's API is not working"
+
+
+@pytest.mark.openai
+def test_prompt_example_1(article_1):
+    sentiment_analysis = SentimentAnalysis()
+    sentiment_analysis.articles_df = article_1
+    import pdb; pdb.set_trace()
+    pass

@@ -13,7 +13,7 @@ Probability = Annotated[float, Field(strict=True, ge=0, le=1)]
 class Citation(BaseModel):
     quote: str = Field(..., min_length=3)
     score: Probability
-    author: Optional[str] = Field(..., min_length=3, max_length=255)
+    author: Optional[str] = Field(None, min_length=3, max_length=255)
     
     @field_validator('quote')
     @classmethod

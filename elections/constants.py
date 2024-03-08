@@ -38,6 +38,7 @@ OPENAI_EMBEDDING_MODEL = 'text-embedding-3-small'
 LOG_LVL = logging.INFO
 SCRAPE_LOG_FN = LOG_DIR / "scrape.log"
 SENTIMENT_LOG_FN = LOG_DIR / "sentiment.log"
+RESULTS_LOG_FN = LOG_DIR / "results.log"
 
 # Portuguese news outlets
 NEWS_OUTLETS = [
@@ -55,7 +56,14 @@ NEWS_OUTLETS = [
     "Sol",
     "Eco",
     "TVI",
-    "TVI24"
+    "TVI24",
+    "Visão",
+    "noticias de coimbra",
+    "porto canal",
+    "Madeira",
+    "SAPO",
+    "SAPO24",
+    "Açores"
 ]
 
 # Politicians
@@ -76,10 +84,15 @@ POLITICIAN_ALIASES = {
         "presidente do Partido Social Democrata",
     ],
     "André Ventura": [
-        "Ventura"
+        "Ventura",
+        "presidente do Chega",
+        "líder do Chega",
     ],
     "Rui Rocha": [
-        "Rocha"
+        "Rocha",
+        "presidente da IL",
+        "presidente da Iniciativa Liberal",
+        "líder dos Liberais"
     ],
     "Mariana Mortágua": [
         "Mortágua",
@@ -88,7 +101,8 @@ POLITICIAN_ALIASES = {
     ],
     "Paulo Raimundo": [
         "Raimundo",
-        "secretário-geral do PCP"
+        "secretário-geral do PCP",
+        "representante da CDU",
     ],
     "Inês de Sousa Real": [
         "Inês Sousa Real",
