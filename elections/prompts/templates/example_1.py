@@ -63,5 +63,5 @@ EXAMPLE = EXAMPLE_PROMPT.format(
    question=QUESTION,
    answer=ANSWER,
    aliases=get_aliases(POLITICIANS),
-   names=POLITICIANS,
+   names=", ".join(POLITICIANS),
 )

@@ -69,9 +69,6 @@ NEWS_OUTLETS = [
 # Politicians
 POLITICIAN_ALIASES = {
     "Pedro Nuno Santos": [
-        "PNS",
-        "P.N.S.",
-        "Pedro Nuno",
         "líder do PS",
         "líder do P.S.",
         "líder do Partido Socialista",
@@ -89,7 +86,6 @@ POLITICIAN_ALIASES = {
         "líder do Chega",
     ],
     "Rui Rocha": [
-        "Rocha",
         "presidente da IL",
         "presidente da Iniciativa Liberal",
         "líder dos Liberais"
@@ -111,7 +107,6 @@ POLITICIAN_ALIASES = {
         "porta voz do Partido Aniamis e Natureza",
     ],
     "Rui Tavares": [
-        "Tavares",
         "líder do Livre",
         "líder do partido Livre",
     ],

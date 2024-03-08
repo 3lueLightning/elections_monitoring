@@ -26,8 +26,7 @@ If the article is only contains factual information regarding a particular polit
 fields should be [] and the overall score should be: None
 
 ## ANSWER:
-{answer}
-""".format(base_prompt=BASE_PROMPT, names="{names}", answer="{answer}")
+""".format(base_prompt=BASE_PROMPT, names="{names}")
 
 
 EXAMPLE_PROMPT = """

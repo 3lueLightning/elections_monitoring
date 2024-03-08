@@ -11,7 +11,9 @@ from pydantic import ValidationError
 from elections import constants
 from elections.data_schemas import ArticleSentiment
 from elections.scrapers.news_scraper import NewsScraper
-from elections.prompts.templates import system_prompt
+from elections.prompts.templates.system_prompt import SYSTEM_PROMPT
+from elections.prompts.templates.user_prompt import USER_PROMPT
+from elections.prompts.templates.utils import get_aliases
 from elections.utils import (
     full_logger, safe_json_loads,  safe_model_validate_json, safe_model_dumps
 )
@@ -108,10 +110,14 @@ class SentimentAnalysis:
         politicians_present = [
             politician for politician in constants.POLITICIANS if politician in article_n_meta
         ]
-        politicians_present_str = ", ".join(politicians_present)
-        system_prompt = system_prompt.SYSTEM_PROMPT
-        user_prompt = system_prompt.USER_PROMPT.format(
-            title=title, description=description, text=text, politicians=politicians_present_str
+
+        system_prompt = SYSTEM_PROMPT
+        user_prompt = USER_PROMPT.format(
+            title=title, 
+            description=description,
+            text=text,
+            names=", ".join(politicians_present),
+            aliases=get_aliases(politicians_present),
         )
         
         try:
