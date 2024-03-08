@@ -1,4 +1,4 @@
-from elections.prompts.templates import example_1
+from elections.prompts.templates import example_1, example_2
 
 
 SYSTEM_PROMPT = """\
@@ -10,7 +10,8 @@ not contain the information needed to answer this question, then simply write: [
 
 ## PROCESS
 Take your time to answer the question and go through the following steps:
-1. Identify Politicians: Identify all politicians mentioned in the document, either directly or via aliases.
+1. Identify Politicians: find all references of the politicians mentioned in the ALIAS section, via their names \
+   or title, and no one else. They all are in the article and must be in the final answer, don't add entities.
 2. Parse Document: Extract relevant information from the document, such as quotes and mentions of the politicians.
    Be extra careful not to miss passages, be on the lookout for names in the ALIAS section and strong adjectives.
 3. Break down passages: if a quote is conveying multiple pieces of information, break it down into smaller parts.
@@ -31,4 +32,9 @@ Take your time to answer the question and go through the following steps:
 
 {example_1}
 
-""".format(example_1=example_1.EXAMPLE_PROMPT)
+{example_2}
+
+""".format(
+   example_1=example_1.EXAMPLE_PROMPT,
+   example_2=example_2.EXAMPLE_PROMPT
+)

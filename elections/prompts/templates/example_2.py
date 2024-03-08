@@ -28,14 +28,14 @@ answer = [
         {"quote": "aproveitou para apontar responsabilidades a Pedro Nuno Santos, enquanto ex-ministro das \
             Infraestruturas, pela falta de conclusão de obras no itinerário principal que atravessa o Baixo Alentejo.",
             "score": 0.4, "author": "Paulo Raimundo"}]},
-    {"name": "André Ventura", "score": 0.5, "citations":[
-        {"quote": "uns deram vitória a Ventura, outros a Raimundo. Mas todos \
-            concordaram nisto: foi um debate abaixo da linha de água: 3 para o PCP, 2,6 para o Chega",
-            "score": 0.5}]},
     {"name": "Paulo Raimundo", "score": 0.6, "citations":[
         {"quote": "uns deram vitória a Ventura, outros a Raimundo. Mas todos \
           concordaram nisto: foi um debate abaixo da linha de água: 3 para o PCP, 2,6 para o Chega",
-         "score": 0.6}]}
+         "score": 0.6}]},
+    {"name": "André Ventura", "score": 0.5, "citations":[
+        {"quote": "uns deram vitória a Ventura, outros a Raimundo. Mas todos \
+            concordaram nisto: foi um debate abaixo da linha de água: 3 para o PCP, 2,6 para o Chega",
+            "score": 0.5}]}
 ]
 answer_json = json.dumps(answer, ensure_ascii=False)
 ANSWER = re.sub(r'\s+', ' ', answer_json.strip())

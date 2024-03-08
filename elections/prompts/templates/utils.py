@@ -21,7 +21,9 @@ def get_aliases(names: str | list[str]) -> str:
       names = [names]
    aliases = constants.PARTIES
    intro = """
-   All these politicians listed in this section ARE PRESENT in this article: \n
+   All these politicians listed in this section ARE PRESENT in this article, \
+   and must be present in the sentiment analysis. Note that sometimes they \
+   are only refered to by their last name: \n
    """
    aka_quote = "* {name}: {party}"
    l = [

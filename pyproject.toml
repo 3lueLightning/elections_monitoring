@@ -20,3 +20,8 @@ dynamic = ["version"]
 markers = [
     "openai: marks tests that require the OpenAI API, hence are paid",
 ]
+
+[tool.setuptools]
+# to solve this bug: 
+# https://github.com/pypa/setuptools/issues/3197#issuecomment-1078770109
+py-modules = []

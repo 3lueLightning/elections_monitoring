@@ -70,7 +70,7 @@ class SentimentAnalysis:
                 FROM articles atc
                 LEFT JOIN article_sentiments atc_s
                 ON atc.article_id = atc_s.article_id
-                WHERE atc_s.analysis IS NULL
+                WHERE atc_s.analysis IS NULL OR atc_s.error_message IS NULL
             """
         if n_articles is not None:
             query = f"{query} LIMIT {n_articles}"
@@ -116,8 +116,8 @@ class SentimentAnalysis:
             title=title, 
             description=description,
             text=text,
-            #names=", ".join(politicians_present),
             aliases=get_aliases(politicians_present),
+            answer=""
         )
         
         try:

@@ -5,7 +5,13 @@ import pandas as pd
 from openai import OpenAI
 
 from elections.sentiment_analysis import SentimentAnalysis
-from elections.prompts.templates import example_1
+from elections.prompts.templates import example_1, example_2
+
+
+#import ipdb; ipdb.set_trace()
+# df.loc[0, "analysis"].sentiments
+# df.loc[0, "analysis"].sentiments[1].citations
+
 
 @pytest.fixture
 def article_1():
@@ -15,6 +21,19 @@ def article_1():
             "title": example_1.TITLE,
             "description": example_1.DESCRIPTION,
             "text": example_1.TEXT,
+        }
+    ])
+    return df
+
+
+@pytest.fixture
+def article_2():
+    df = pd.DataFrame([
+        {
+            "article_id": 2,
+            "title": example_2.TITLE,
+            "description": example_2.DESCRIPTION,
+            "text": example_2.TEXT,
         }
     ])
     return df
@@ -56,3 +75,26 @@ def test_prompt_example_1(article_1):
     assert pns_sentiments.score > 0.5, "Pedro Nuno Santos should have a score above 0.5"
     assert montenegro_sentiments.score < 0.6, "Luís Montenegro should have a score below 0.6"
     assert rocha_sentiments.score is None, "Rui Rocha should have a score of None"
+
+
+@pytest.mark.openai
+def test_prompt_example_2(article_2):
+    sentiment_analysis = SentimentAnalysis()
+    sentiment_analysis.articles_df = article_2
+    df = sentiment_analysis.get_sentiments(save=False)
+    
+    assert len(df) == 1, "The dataframe should have only one row"
+    
+    sentiments = df.loc[0, "analysis"].sentiments
+    names = [sent.name for sent in sentiments]
+
+    # excluding Ventura from the analysis
+    assert set(names) == set(example_2.POLITICIANS[:-1]), \
+        "Politician names don't match, expecting: {example_1.POLITICIANS} "\
+        "got: {names}"
+    
+    pns_sentiments = [sent for sent in sentiments if sent.name == "Pedro Nuno Santos"][0]
+    raimundo_sentiments = [sent for sent in sentiments if sent.name == "Paulo Raimundo"][0]
+    
+    assert pns_sentiments.score <= 0.55, "Pedro Nuno Santos should have a score above 0.5"
+    assert raimundo_sentiments.score > .5, "Raimudo should have a score above 0.5"
