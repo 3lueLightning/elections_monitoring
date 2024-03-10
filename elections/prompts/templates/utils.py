@@ -16,9 +16,12 @@ def old_get_aliases(names: str | list[str]) -> str:
    return intro + "\n".join(l)
 
 
-def get_aliases(names: str | list[str]) -> str:
-   if isinstance(names, str):
-      names = [names]
+def get_aliases(surnames: str | list[str]) -> str:
+   surnames_to_names = {surname: name for name, surname in constants.SURNAMES.items()}
+   
+   if isinstance(surnames, str):
+      surnames = [surnames]
+   
    aliases = constants.PARTIES
    intro = """
    All these politicians listed in this section ARE PRESENT in this article, \
@@ -27,7 +30,10 @@ def get_aliases(names: str | list[str]) -> str:
    """
    aka_quote = "* {name}: {party}"
    l = [
-      aka_quote.format(name=politician, party=aliases[politician]) 
-      for politician in names
+      aka_quote.format(
+         name=surnames_to_names.get(politician, politician),
+         party=aliases[surnames_to_names.get(politician, politician)]
+      ) 
+      for politician in surnames
    ]
    return intro + "\n".join(l)

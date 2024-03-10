@@ -111,6 +111,16 @@ POLITICIAN_ALIASES = {
         "líder do partido Livre",
     ],
 }
+SURNAMES = {
+    "Pedro Nuno Santos": "Nuno Santos",
+    "Luís Montenegro": "Montenegro",
+    "André Ventura": "Ventura",
+    "Rui Rocha": "Rocha",
+    "Mariana Mortágua": "Mortágua",
+    "Paulo Raimundo": "Raimundo",
+    "Inês de Sousa Real": "Sousa Real",
+    "Rui Tavares": "Tavares",
+}
 POLITICIANS = list(POLITICIAN_ALIASES.keys())
 
 POLITICIAN_COLORS = {
@@ -132,6 +142,8 @@ PARTIES = {
     "Mariana Mortágua": "coordenadora do Bloco de Esquerda (BE)",
     "Paulo Raimundo": "secretário-geral do PCP e lider da CDU",
     "Inês de Sousa Real": "porta voz do Partido Animais e Natureza (PAN)",
+    # HOTFIX
+    "Inês Sousa Real": "porta voz do Partido Animais e Natureza (PAN)",
     "Rui Tavares": "líder do Livre",
 }
 

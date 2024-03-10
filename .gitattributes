@@ -1,0 +1,2 @@
+*.sqlite filter=lfs diff=lfs merge=lfs -text
+/Users/diogo/Dev/Elections/data/interim/news.sqlite filter=lfs diff=lfs merge=lfs -text

@@ -20,7 +20,7 @@ from elections.utils import (
 
 
 # Currently replaced by printing because of a bug in my editor VScode
-#logger = full_logger(constants.LOG_LVL, constants.SENTIMENT_LOG_FN, to_console=False)
+logger = full_logger(constants.LOG_LVL, constants.SENTIMENT_LOG_FN, to_console=False)
 
 
 class MaxRetriesExceeded(Exception):
@@ -70,27 +70,39 @@ class SentimentAnalysis:
                 FROM articles atc
                 LEFT JOIN article_sentiments atc_s
                 ON atc.article_id = atc_s.article_id
-                WHERE atc_s.analysis IS NULL OR atc_s.error_message IS NULL
+                WHERE 
+                    atc.creation_datetime >= DATE('2024-03-07')
+                    AND atc_s.analysis IS NULL
+                    AND atc_s.error_message IS NULL
             """
         if n_articles is not None:
             query = f"{query} LIMIT {n_articles}"
         self.articles_df = NewsScraper.load_articles(query)
     
-    def filter_articles(self) -> None:
+    def process_articles(self) -> None:
         """
         Many extracted articles are irrelavant to the election analysis depite having relevant search
         queries. To accommodated for that we filter the articles to only include those that mention
         politicians in the title or description or text.
         """
-        assert not self.articles_df.empty, "No articles loaded"
+        df = self.articles_df.copy()
+        assert not df.empty, "No articles loaded"
         
+        # filter
         aliases = [alias for aliases in constants.POLITICIAN_ALIASES.values() for alias in aliases]
         names_n_aliases = aliases + constants.POLITICIANS
         mask_politician_in_title = (
-            (self.articles_df["title"] + self.articles_df["description"] + self.articles_df["text"])
+            (df["title"] + df["description"] + df["text"])
             .str.contains("|".join(names_n_aliases), case=False)
         )
-        self.articles_df = self.articles_df[mask_politician_in_title]
+        df = df[mask_politician_in_title].reset_index(drop=True)
+        
+        # trim length
+        df["title"] = df["text"].str.slice(0, 200)
+        df["text"] = df["text"].str.slice(0, 200)
+        df["text"] = df["text"].str.slice(0, 10_000)
+        
+        self.articles_df = df
     
     def get_article_sentiment(self, title: str, description: str, text: str) -> pd.DataFrame:
         """
@@ -108,7 +120,7 @@ class SentimentAnalysis:
         """
         article_n_meta = title + "\n" + description + "\n" + text
         politicians_present = [
-            politician for politician in constants.POLITICIANS if politician in article_n_meta
+            politician for politician in constants.SURNAMES.values() if politician in article_n_meta
         ]
 
         system_prompt = SYSTEM_PROMPT
@@ -134,6 +146,7 @@ class SentimentAnalysis:
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt},
                 ],
+                temperature=0.3,
             )
             val_error = None
         except (ValidationError, ValueError) as e:
@@ -190,8 +203,8 @@ class SentimentAnalysis:
         self.sentiments = []
         self.articles_counter = 0
         for i, row in tqdm(self.articles_df.reset_index().iterrows(), total=N):
-            #if i % freq == 0:
-                #logger.info(f"Processing article {i + 1} of {N}")
+            if i % freq == 0:
+                logger.info(f"Processing article {i + 1} of {N}")
                 #print(f"Processing article {i + 1} of {N}")
             sentiment = self.get_article_sentiment(row["title"], row["description"], row["text"])
             sentiment.insert(loc=0, column="article_id", value=row["article_id"])
@@ -202,8 +215,8 @@ class SentimentAnalysis:
                     if save:
                         self._save_sentiments(engine)
                     else:
-                        #logger.info(f"Extracted {self.articles_counter} of {N}")
-                        print(f"Extracted {self.articles_counter} of {N}")
+                        logger.info(f"Extracted {self.articles_counter} of {N}")
+                        #print(f"Extracted {self.articles_counter} of {N}")
             if max_failures is not None and i + 1 - self.articles_counter >= max_failures:
                 raise MaxRetriesExceeded(f"Failed to extract {max_failures} articles")
         if save:
@@ -217,8 +230,8 @@ class SentimentAnalysis:
         sentiments_df["analysis"] = sentiments_df["analysis"].apply(safe_model_dumps)
         sentiments_df.to_sql("article_sentiments", con=engine, if_exists="append", index=False)
         self.sentiments = []
-        #logger.info(f"Saved in DB {self.articles_counter} of {N}")
-        print(f"Saved in DB {self.articles_counter} of {len(self.articles_df)}")
+        logger.info(f"Saved in DB {self.articles_counter} of {len(self.articles_df)}")
+        #print(f"Saved in DB {self.articles_counter} of {len(self.articles_df)}")
     
     @staticmethod
     def load_article_sentiments(query: str="SELECT * FROM article_sentiments") -> pd.DataFrame:

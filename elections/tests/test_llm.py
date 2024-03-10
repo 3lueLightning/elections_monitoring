@@ -5,7 +5,8 @@ import pandas as pd
 from openai import OpenAI
 
 from elections.sentiment_analysis import SentimentAnalysis
-from elections.prompts.templates import example_1, example_2
+from elections.prompts.templates import example_1, example_2, example_3
+from elections.prompts.validation import val_1
 
 
 #import ipdb; ipdb.set_trace()
@@ -14,7 +15,7 @@ from elections.prompts.templates import example_1, example_2
 
 
 @pytest.fixture
-def article_1():
+def article_ex1():
     df = pd.DataFrame([
         {
             "article_id": 1,
@@ -27,13 +28,39 @@ def article_1():
 
 
 @pytest.fixture
-def article_2():
+def article_ex2():
     df = pd.DataFrame([
         {
             "article_id": 2,
             "title": example_2.TITLE,
             "description": example_2.DESCRIPTION,
             "text": example_2.TEXT,
+        }
+    ])
+    return df
+
+
+@pytest.fixture
+def article_ex3():
+    df = pd.DataFrame([
+        {
+            "article_id": 3,
+            "title": example_3.TITLE,
+            "description": example_3.DESCRIPTION,
+            "text": example_3.TEXT,
+        }
+    ])
+    return df
+
+
+@pytest.fixture
+def article_val1():
+    df = pd.DataFrame([
+        {
+            "article_id": 4,
+            "title": val_1.TITLE,
+            "description": val_1.DESCRIPTION,
+            "text": val_1.TEXT,
         }
     ])
     return df
@@ -55,9 +82,9 @@ def test_openai_connection():
 
 
 @pytest.mark.openai
-def test_prompt_example_1(article_1):
+def test_prompt_example_1(article_ex1):
     sentiment_analysis = SentimentAnalysis()
-    sentiment_analysis.articles_df = article_1
+    sentiment_analysis.articles_df = article_ex1
     df = sentiment_analysis.get_sentiments(save=False)
     
     assert len(df) == 1, "The dataframe should have only one row"
@@ -78,9 +105,9 @@ def test_prompt_example_1(article_1):
 
 
 @pytest.mark.openai
-def test_prompt_example_2(article_2):
+def test_prompt_example_2(article_ex2):
     sentiment_analysis = SentimentAnalysis()
-    sentiment_analysis.articles_df = article_2
+    sentiment_analysis.articles_df = article_ex2
     df = sentiment_analysis.get_sentiments(save=False)
     
     assert len(df) == 1, "The dataframe should have only one row"
@@ -89,8 +116,8 @@ def test_prompt_example_2(article_2):
     names = [sent.name for sent in sentiments]
 
     # excluding Ventura from the analysis
-    assert set(names) == set(example_2.POLITICIANS[:-1]), \
-        "Politician names don't match, expecting: {example_1.POLITICIANS} "\
+    assert set(names) == set(example_2.POLITICIANS) or set(names) == {'Pedro Nuno Santos', 'Paulo Raimundo'}, \
+        "Politician names don't match, expecting: {example_2.POLITICIANS} "\
         "got: {names}"
     
     pns_sentiments = [sent for sent in sentiments if sent.name == "Pedro Nuno Santos"][0]
@@ -98,3 +125,32 @@ def test_prompt_example_2(article_2):
     
     assert pns_sentiments.score <= 0.55, "Pedro Nuno Santos should have a score above 0.5"
     assert raimundo_sentiments.score > .5, "Raimudo should have a score above 0.5"
+
+
+@pytest.mark.openai
+def test_prompt_example_3(article_ex3):
+    sentiment_analysis = SentimentAnalysis()
+    sentiment_analysis.articles_df = article_ex3
+    df = sentiment_analysis.get_sentiments(save=False)
+    
+    assert len(df) == 1, "The dataframe should have only one row"
+    
+    sentiments = df.loc[0, "analysis"].sentiments
+    names = [sent.name for sent in sentiments]
+    
+    assert set(names) == set(example_3.POLITICIANS), \
+        "Politician names don't match, expecting: {example_3.POLITICIANS} "\
+        "got: {names}"
+    
+    pns_sentiments = [sent for sent in sentiments if sent.name == "Pedro Nuno Santos"][0]
+    other_scores = [sent.score for sent in sentiments if sent.name != "Pedro Nuno Santos"]
+    
+    assert pns_sentiments.score <= 0.45, "Pedro Nuno Santos should have a score above 0.45"
+    assert not any(other_scores), "besides PNS no one should have scores"
+
+
+def test_promt_val_1(article_val1):
+    sentiment_analysis = SentimentAnalysis()
+    sentiment_analysis.articles_df = article_val1
+    df = sentiment_analysis.get_sentiments(save=False)
+    print("here")

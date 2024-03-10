@@ -6,6 +6,7 @@ from thefuzz import fuzz
 from typing_extensions import Annotated
 from pydantic import BaseModel, Field, field_validator, ValidationInfo
 
+from elections import constants
 
 Probability = Annotated[float, Field(strict=True, ge=0, le=1)]
 
@@ -56,8 +57,10 @@ class Sentiment(BaseModel):
         context = info.context
         if context:
             article_n_meta = context.get('article_n_meta')
-            if name not in article_n_meta:
-                raise ValueError(f"Citation `{name}` not found in article_n_meta")
+            # HOTFIX Ines de Sousa Real
+            surnames = constants.SURNAMES.get(name, name)
+            if surnames not in article_n_meta:
+                raise ValueError(f"Citation `{surnames}` not found in article_n_meta")
         return name
 
 

@@ -118,5 +118,12 @@ dmypy.json
 # Vim
 *.swp
 
+# mac specific files
+.DS_Store
+
 # Experimentation files
 tt*
+
+# untrack data files in git, using LFS instead
+data/*
+

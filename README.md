@@ -31,17 +31,3 @@ It consists of 3 parts, with the first 2 being ready and the 3rd under construct
     3.  *Entry point*: under construction
 
 Note: this is a one-off project therefore I didn’t go through the steps to productionize it.
-
-
-## Next steps:
-1. extract more articles:
-    1. run extractor again, since the last extraction date time was on: 2024-03-05
-    2. get more news outlets: some outlet are over represented (eg: SIC, Expressso), hence running searches specifying the outlet name could help get different ones
-2. validate sentiment analysis:
-    1. situation: currently out of the 686 articles scraped for 80 sentiment analysis didn't run successfully and 289 has no sentiment expressed
-    2. possibilities:
-        1. in the case of the numerous articles without sentiment some genuinely have no sentiment other might - investigation on-going
-        2. the errors are due to validation error of the pydantic data model passed to instructor - understand how modify prompt to reduce errors. As a backup use GPT-4-turbo for some articles rather then GPT-3.5-turbo
-        3. add new examples on the prompt to avoid the pitfalls above
-        4. create a seconda vlidation stage if citations of a politician are too negative
-
