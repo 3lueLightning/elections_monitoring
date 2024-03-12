@@ -1,27 +1,25 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling >= 1.21.1"]
+build-backend = "hatchling.build"
 
 [project]
 name = "elections"
 authors = [
     {name = "Diogo"},
 ]
-description = "Package made to monitor the 2024 portuguese elections"
+description = "Sentiment analysis of the March 2024 portuguese elections"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 classifiers = [
     "Programming Language :: Python :: 3",
 ]
 
 dynamic = ["version"]
 
+[tool.hatch.version]
+path = "src/elections/__about__.py"
+
 [tool.pytest.ini_options]
 markers = [
     "openai: marks tests that require the OpenAI API, hence are paid",
 ]
-
-[tool.setuptools]
-# to solve this bug: 
-# https://github.com/pypa/setuptools/issues/3197#issuecomment-1078770109
-py-modules = []

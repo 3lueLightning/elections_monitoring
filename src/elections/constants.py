@@ -3,11 +3,11 @@ import logging
 from pathlib import Path
 from datetime import datetime
 
-from milvus import default_server
+#from milvus import default_server
 
 
 # Folders
-PACKAGE_ROOT = Path(__file__).parents[1]
+PACKAGE_ROOT = Path(__file__).parents[2]
 SRC_FOLDER = PACKAGE_ROOT / "elections"
 LOG_DIR = PACKAGE_ROOT / "logs"
 DATA_DIR = PACKAGE_ROOT / "data"
@@ -26,13 +26,13 @@ POLITICAL_PATHS = {
 }
 
 # Milvus vector DB
-MILVUS_HOST = 'localhost'
-MILVUS_PORT = default_server.listen_port
+# MILVUS_HOST = 'localhost'
+# MILVUS_PORT = default_server.listen_port
 
 # OpenAI API
 MAX_RETRIES = 3
 OPENAI_GPT_MODEL = 'gpt-3.5-turbo' # 'gpt-4-turbo-preview'
-OPENAI_EMBEDDING_MODEL = 'text-embedding-3-small'
+# OPENAI_EMBEDDING_MODEL = 'text-embedding-3-small'
 
 # Logging
 LOG_LVL = logging.INFO
