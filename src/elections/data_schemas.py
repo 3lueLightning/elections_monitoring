@@ -1,6 +1,6 @@
-import numpy as np
-
 from typing import Optional
+
+import numpy as np
 
 from thefuzz import fuzz
 from typing_extensions import Annotated

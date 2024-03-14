@@ -8,9 +8,7 @@ import seaborn as sns
 import sqlite3
 
 from elections import constants
-from elections.news_scraper import NewsScraper
 from elections.data_schemas import ArticleSentiment
-from elections.sentiment_analysis import SentimentAnalysis
 from elections.utils import safe_model_validate_json, safe_json_loads, full_logger
 
 
@@ -274,3 +272,96 @@ def plot_politician_daily_article_refs(df):
             ha='center'
         )
         plt.show()
+
+
+def get_avg_politician_scores(df: pd.DataFrame) -> pd.DataFrame:
+    assert "name" in df.columns, "first you must expand the sentiments"
+    avg_scores = df.groupby("name")["score"].mean()
+    avg_scores.sort_values(ascending=False, inplace=True)
+    return avg_scores
+
+
+def plot_politician_avg_scores(df: pd.DataFrame) -> None:
+    """
+    Plot the average scores for each politician.
+    
+    Args:
+        df: A dataframe with expanded sentiments (ArticleSentiments convertes 
+            into multiples rows, one for each quote in the article and a "name"
+            column)
+    
+    Returns:
+        a plot
+    """
+    avg_scores = get_avg_politician_scores(df)
+    print(avg_scores)
+    
+    colors = [
+        constants.POLITICIAN_COLORS[name] for name in avg_scores.index
+    ]
+    with sns.axes_style("whitegrid"):
+        ax = sns.barplot(
+            avg_scores, 
+            orient = 'h',
+        )
+        plt.xlabel("Índice de positividade médio, sendo 0 muito negativo, 1 muito positivo")
+        plt.ylabel("")
+        for i, bar in enumerate(ax.patches):
+            bar.set_color(colors[i])
+        plt.show()
+
+
+def plot_politicians_ridge(df: pd.DataFrame) -> None:
+    """
+    Generates a Ridge plot, which is an overlapping density plot for each politician
+    
+    Args:
+        df: A dataframe with expanded sentiments (ArticleSentiments convertes 
+            into multiples rows, one for each quote in the article and a "name"
+            column)
+    
+    Returns:
+        a plot
+    """
+    def label(label):
+        ax = plt.gca()
+        ax.text(
+            0, .4, label, color='black', fontsize=13,
+            ha="left", va="center", transform=ax.transAxes
+        )
+    
+    def mean_plot(**kwargs):
+        """
+        Adds a vertical line at the mean of the data
+        """
+        data = kwargs.pop("data")
+        x_col = kwargs.pop("x")
+        ymin = kwargs.pop("ymin")
+        ymax = kwargs.pop("ymax")
+        return plt.vlines(data[x_col].mean(), ymin=ymin, ymax=ymax, **kwargs)
+
+    # determine the order of density plots (the lowest average score on top of 
+    # the graph and the highest at the bottom). Orders the colors accordingly
+    # to have the party color match each politician
+    avg_scores = get_avg_politician_scores(df)
+    row_order = avg_scores.reset_index()["name"].tolist()[::-1]
+    colors = [constants.POLITICIAN_COLORS[name] for name in row_order]
+    palette = sns.set_palette(sns.color_palette(colors))
+
+    with sns.axes_style("white", rc={"axes.facecolor": (0, 0, 0, 0), 'axes.linewidth':2}):
+        g = sns.FacetGrid(
+            df[~df.score.isnull()], 
+            palette=palette, row="name", hue="name",
+            hue_order=row_order, row_order=row_order, aspect=9, height=1.2
+        )
+
+        g.map_dataframe(sns.kdeplot, x="score", color='black', cut=0)
+        g.map_dataframe(sns.kdeplot, x="score", fill=True, alpha=1, cut=0)
+        g.map_dataframe(mean_plot, x="score", ymin=0, ymax=1.7, linewidth=2, color="yellow", linestyle="--")
+
+        g.map(label, "score")
+        g.figure.subplots_adjust(hspace=-0.5)
+        g.set_titles("")
+        g.set(yticks=[], xlabel="ìndice de postividade (0 muito negativo, 1 muito positivo)", ylabel="")
+        g.despine( left=True)
+        plt.suptitle('Distribuição de índice de positividade nos media', y=0.95)
