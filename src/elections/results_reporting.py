@@ -8,7 +8,7 @@ import seaborn as sns
 import sqlite3
 
 from elections import constants
-from elections.scrapers.news_scraper import NewsScraper
+from elections.news_scraper import NewsScraper
 from elections.data_schemas import ArticleSentiment
 from elections.sentiment_analysis import SentimentAnalysis
 from elections.utils import safe_model_validate_json, safe_json_loads, full_logger

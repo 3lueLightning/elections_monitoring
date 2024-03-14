@@ -3,19 +3,9 @@ channels:
   - conda
   - conda-forge
 dependencies:
-  - python==3.12
+  - python>=3.12
   - pip:
     - pandas~=2.1.1
     - jupyter
-    #- langchain
     - newspaper3k
     - gnews==0.3.6
-    #- "transformers[sentencepiece]"
-    #- sentence-transformers==2.2.2
-    #- torch
-    #- torchvision
-    #- torchaudio
-    #- huggingface_hub #check if really needed
-    #- googlenews
-
-# pip install jupyter pandas langchain "transformers[sentencepiece]" sentence-transformers torch torchvision

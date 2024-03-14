@@ -10,7 +10,7 @@ from pydantic import ValidationError
 
 from elections import constants
 from elections.data_schemas import ArticleSentiment
-from elections.scrapers.news_scraper import NewsScraper
+from elections.news_scraper import NewsScraper
 from elections.prompts.templates.system_prompt import SYSTEM_PROMPT
 from elections.prompts.templates.user_prompt import USER_PROMPT_TEMPLATE
 from elections.prompts.templates.utils import get_aliases
