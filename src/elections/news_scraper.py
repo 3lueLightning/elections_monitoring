@@ -162,7 +162,7 @@ class NewsScraper():
         ]
         
         query = f"""
-        WITH politicans_referred AS (
+        WITH politicians_referred AS (
             SELECT
                 DATE(pubdate) pubday,
                 {",\n\t".join(case_when_list)}
@@ -171,7 +171,7 @@ class NewsScraper():
         SELECT
             \tpubday,
             \t{",\n\t".join(sum_cols)}
-        FROM politicans_referred
+        FROM politicians_referred
         GROUP BY pubday
         ORDER BY pubday
         """
